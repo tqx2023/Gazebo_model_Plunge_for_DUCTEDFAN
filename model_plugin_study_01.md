@@ -119,10 +119,6 @@ echo "PROJECT_ROOT=${PROJECT_ROOT}"
 echo "GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}"
 
 ```
-- 然后运行
-```bash
-bash run_gazebo.sh
-```
 #### 使用插件
 - 一旦你编译了一个插件作为共享库（见上文）， 你可以将其附加到SDF文件中的世界或模型中。启动时，Gazebo解析SDF文件，定位插件，并加载代码。 Gazebo 能够找到该插件非常重要。 要么指定了插件的完整路径，要么插件存在于 环境变量中的一条路径。`GAZEBO_PLUGIN_PATH`
 - 创建一个世界文件，然后把下面的代码复制进去。示例世界文件 也可以在 `examples/plugins/hello_world/hello.world `中找到。
