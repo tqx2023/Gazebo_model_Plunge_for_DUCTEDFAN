@@ -174,3 +174,5 @@ $ gzserver -u model_push.world
 $ gzclient
 ```
 - 点击界面中的播放按钮来解除模拟暂停，你应该会看到盒子移动。
+- ![示例model插件复现效果](./image/model_plugin插件示例.png)
+- 注意：很神奇的一点，只是给了x轴一个恒定速度0.3 m/s , 但是在Gazebo中方块与地面接触时在重力和摩擦作用下会产生力矩，所以它在前进的同时发生了翻滚。
