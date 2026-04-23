@@ -103,7 +103,24 @@ $ make
 ```bash
 $ export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:~/gazebo_plugin_tutorial/build
 ```
--注意：这只改变当前壳体的路径。如果你想使用 你每次打开新 Temrinal 的插件，在文件上加上上面的那行。`~/.bashrc`
+- 注意：这只改变当前壳体的路径。如果你想使用 你每次打开新 Temrinal 的插件，在文件上加上上面的那行。`~/.bashrc`
+- 我不喜欢这个方法，他直接在你的全局环境下插入了这个插件的链接。我建议项目目录下写一个 `run_gazebo.sh`：
+```bash
+#!/bin/bash
+
+PROJECT_ROOT=$(cd "$(dirname "$0")" && pwd)
+
+export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:${PROJECT_ROOT}/build
+export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:${PROJECT_ROOT}/models
+export GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:${PROJECT_ROOT}/worlds
+
+gazebo ${PROJECT_ROOT}/worlds/test.world
+
+```
+- 然后运行
+```bash
+bash run_gazebo.sh
+```
 #### 使用插件
 - 一旦你编译了一个插件作为共享库（见上文）， 你可以将其附加到SDF文件中的世界或模型中 （更多信息请参见SDF文档）。 启动时，Gazebo解析SDF文件，定位插件，并加载代码。 Gazebo 能够找到该插件非常重要。 要么指定了插件的完整路径，要么插件存在于 环境变量中的一条路径。`GAZEBO_PLUGIN_PATH`
 - 创建一个世界文件，然后把下面的代码复制进去。示例世界文件 也可以在 `examples/plugins/hello_world/hello.world `中找到。
