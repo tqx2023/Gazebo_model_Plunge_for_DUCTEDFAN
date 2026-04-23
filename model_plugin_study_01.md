@@ -77,3 +77,60 @@ list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
 add_library(hello_world SHARED hello_world.cc)
 target_link_libraries(hello_world ${GAZEBO_LIBRARIES})
 ```
+- 旧版本Gazebo 6 以下 老版本 Gazebo 依赖这个变量`CMAKE_CXX_FLAGS`，把 Gazebo 的编译选项追加到全局 C++ 编译参数里
+```cpp
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
+```
+- 新的写法是使用target函数保证有这个参数，set函数保证编译器为c++ 11
+```cpp
+target_compile_options(hello_world PRIVATE ${GAZEBO_CXX_FLAGS})
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+```
+- 创建构建目录
+```bash
+$ mkdir ~/gazebo_plugin_tutorial/build
+$ cd ~/gazebo_plugin_tutorial/build
+```
+- 编译代码。
+```bash
+$ cmake ../
+$ make
+```
+- 编译后将得到一个共享库， 可以插入凉亭模拟中。`~/gazebo_plugin_tutorial/build/libhello_world.so`
+- 最后，将你的库路径添加到：`GAZEBO_PLUGIN_PATH`
+```bash
+$ export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:~/gazebo_plugin_tutorial/build
+```
+-注意：这只改变当前壳体的路径。如果你想使用 你每次打开新 Temrinal 的插件，在文件上加上上面的那行。`~/.bashrc`
+#### 使用插件
+- 一旦你编译了一个插件作为共享库（见上文）， 你可以将其附加到SDF文件中的世界或模型中 （更多信息请参见SDF文档）。 启动时，Gazebo解析SDF文件，定位插件，并加载代码。 Gazebo 能够找到该插件非常重要。 要么指定了插件的完整路径，要么插件存在于 环境变量中的一条路径。`GAZEBO_PLUGIN_PATH`
+- 创建一个世界文件，然后把下面的代码复制进去。示例世界文件 也可以在 `examples/plugins/hello_world/hello.world `中找到。
+```bash
+$ code ~/gazebo_plugin_tutorial/hello.world
+```
+```bash
+<?xml version="1.0"?>
+<sdf version="1.4">
+  <world name="default">
+    <plugin name="hello_world" filename="libhello_world.so"/>
+  </world>
+</sdf>
+```
+- 现在用：`gzserver`
+```bash
+$ gzserver ~/gazebo_plugin_tutorial/hello.world --verbose
+```
+- 你应该会看到类似的输出：
+```bash
+Gazebo multi-robot simulator, version 6.1.0
+Copyright (C) 2012-2015 Open Source Robotics Foundation.
+Released under the Apache 2 License.
+http://gazebosim.org
+
+[Msg] Waiting for master.
+[Msg] Connected to gazebo master @ http://127.0.0.1:11345
+[Msg] Publicized address: 172.23.1.52
+Hello World!
+```
