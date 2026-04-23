@@ -108,13 +108,15 @@ $ export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:~/gazebo_plugin_tutorial/build
 ```bash
 #!/bin/bash
 
-PROJECT_ROOT=$(cd "$(dirname "$0")" && pwd)
+# ⭐ 必须加这一句 , 要让gazebo本身的路径能加载进来。
+source /usr/share/gazebo/setup.bash
 
-export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:${PROJECT_ROOT}/build
-export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:${PROJECT_ROOT}/models
-export GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:${PROJECT_ROOT}/worlds
+PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-gazebo ${PROJECT_ROOT}/worlds/test.world
+export GAZEBO_PLUGIN_PATH="${GAZEBO_PLUGIN_PATH}:${PROJECT_ROOT}/build"
+
+echo "PROJECT_ROOT=${PROJECT_ROOT}"
+echo "GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}"
 
 ```
 - 然后运行
@@ -122,7 +124,7 @@ gazebo ${PROJECT_ROOT}/worlds/test.world
 bash run_gazebo.sh
 ```
 #### 使用插件
-- 一旦你编译了一个插件作为共享库（见上文）， 你可以将其附加到SDF文件中的世界或模型中 （更多信息请参见SDF文档）。 启动时，Gazebo解析SDF文件，定位插件，并加载代码。 Gazebo 能够找到该插件非常重要。 要么指定了插件的完整路径，要么插件存在于 环境变量中的一条路径。`GAZEBO_PLUGIN_PATH`
+- 一旦你编译了一个插件作为共享库（见上文）， 你可以将其附加到SDF文件中的世界或模型中。启动时，Gazebo解析SDF文件，定位插件，并加载代码。 Gazebo 能够找到该插件非常重要。 要么指定了插件的完整路径，要么插件存在于 环境变量中的一条路径。`GAZEBO_PLUGIN_PATH`
 - 创建一个世界文件，然后把下面的代码复制进去。示例世界文件 也可以在 `examples/plugins/hello_world/hello.world `中找到。
 ```bash
 $ code ~/gazebo_plugin_tutorial/hello.world
@@ -134,6 +136,10 @@ $ code ~/gazebo_plugin_tutorial/hello.world
     <plugin name="hello_world" filename="libhello_world.so"/>
   </world>
 </sdf>
+```
+- 运行我们的`run_gazebo.sh`脚本，确保把插件挂在了`GAZEBO_PLUGIN_PATH`上
+```bash
+source ~/gazebo_plugin_tutorial/run_gazebo.sh
 ```
 - 现在用：`gzserver`
 ```bash
@@ -151,3 +157,4 @@ http://gazebosim.org
 [Msg] Publicized address: 172.23.1.52
 Hello World!
 ```
+![HelloWorld命令行输出](./image/px4命令行输出HelloWorld.png)
