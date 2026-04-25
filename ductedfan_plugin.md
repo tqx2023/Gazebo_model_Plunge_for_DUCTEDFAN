@@ -50,16 +50,52 @@ namespace gazebo
 ```bash
 code ~/DuctedFanUAV-Autopilot/Tools/sitl_gazebo/CMakeLists.txt
 ```
-- 找到 `LiftDragPlugin` 附近，例如：
+![代码插入位置说明](/image/ductedfan_plugin_01.png)
+- 真正创建 `.so` 的是 `add_library(...)` ，编译后生成的库文件是：`libDuctedFanPlugin.so`。后面 SDF 里必须写这个名字
 ```bash
-add_library(LiftDragPlugin SHARED src/liftdrag_plugin/liftdrag_plugin.cpp)
-list(APPEND plugins LiftDragPlugin)
+foreach(plugin ${plugins})
+  target_link_libraries(${plugin} ...)
+endforeach()
 ```
-- 在它附近加入
+- 给已经存在`plugin`的 `target` 链接库
+- 在`target`链接库上面加入
 ```bash
 add_library(DuctedFanPlugin SHARED src/ductedfan_plugin/ductedfan_plugin.cpp)
 list(APPEND plugins DuctedFanPlugin)
-```
-- 编译后生成的库文件是：`libDuctedFanPlugin.so`
-- 后面 SDF 里必须写这个名字
 
+foreach(plugin ${plugins})
+  target_link_libraries(${plugin} ...)
+endforeach()
+```
+
+### 在模型 SDF 中加载插件
+- 找到你要测试的飞机模型 SDF。
+- 例如
+```bash
+cd ~/DuctedFanUAV-Autopilot/Tools/sitl_gazebo/models/SHW09/SHW09.sdf.jinjia
+```
+更改了`sdf.jinjia`文件 , 原先编译出来的`.sdf`文件要删除掉。
+- 在 `<model>` 标签内部加入：
+```bash
+<model name="ductedfan">
+  ...
+
+  <plugin name="ductedfan_plugin" filename="libDuctedFanPlugin.so">
+  </plugin>
+
+</model>
+```
+- 注意：
+```bash
+<plugin> 要放在 <model> 里面
+不要放进 <link> 里面
+```
+
+### 重新编译
+```bash
+cd ~/DuctedFanUAV-Autopilot
+make px4_sitl gazebo_SHW09
+```
+
+### 最小闭环验证成功
+![HELLOWORLD成功打印](/image/ductedfan_plugin_02.png)
