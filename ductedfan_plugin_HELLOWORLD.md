@@ -85,6 +85,7 @@ cd ~/DuctedFanUAV-Autopilot/Tools/sitl_gazebo/models/SHW09/SHW09.sdf.jinjia
 
 </model>
 ```
+![HELLOWORLD成功打印](/image/ductedfan_plugin_02.png)
 - 注意：
 ```bash
 <plugin> 要放在 <model> 里面
@@ -98,4 +99,4 @@ make px4_sitl gazebo_SHW09
 ```
 
 ### 最小闭环验证成功
-![HELLOWORLD成功打印](/image/ductedfan_plugin_02.png)
+![HELLOWORLD成功打印](/image/ductedfan_plugin_03.png)
