@@ -41,8 +41,8 @@
 当前版本中加入了以下两个头文件，用于支持命令行输出和时间间隔控制。该部分主要用于调试阶段，后续在关闭调试输出后可以删除。
 
 ```cpp
-// Headers used for temporary runtime debug output.
-// These headers can be removed when debug output is no longer required.
+// 用于临时运行时调试输出的头文件。
+// 无需调试输出时，可移除这些头文件。
 #include <iostream>
 #include <chrono>
 ```
@@ -63,8 +63,8 @@ void DuctedFanModel::UpdateForcesAndMoments()
 
 ```cpp
 // ================= Debug output =========================
-// Keep the previous print time across repeated update calls.
-// DEBUG_PRINT controls whether runtime debug output is enabled.
+// 在重复调用更新方法时，保留上一次的打印时间。
+// DEBUG_PRINT 用于控制是否启用运行时调试输出。
 const bool DEBUG_PRINT = true;
 
 if (DEBUG_PRINT) {
@@ -73,11 +73,11 @@ if (DEBUG_PRINT) {
 
     auto current_time = std::chrono::steady_clock::now();
 
-    // Compute elapsed time in milliseconds.
+    // 计算已流逝的时间（单位：毫秒）
     auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
         current_time - last_print_time).count();
 
-    // Print debug information every 1000 ms.
+    // 每 1000 毫秒（1秒）打印一次调试信息。
     if (elapsed_ms >= 1000) {
         std::cout << "--- Debug Info [Motor " << motor_number_ << "] ---" << std::endl;
         std::cout << "motor_rot_vel_: " << motor_rot_vel_ << "\n"
@@ -89,7 +89,7 @@ if (DEBUG_PRINT) {
                   << "scalar: " << scalar << std::endl;
         std::cout << "----------------------------------" << std::endl;
 
-        // Update the timestamp after printing.
+        // 打印完成后更新时间戳。
         last_print_time = current_time;
     }
 }
