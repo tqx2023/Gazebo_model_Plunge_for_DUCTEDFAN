@@ -1,5 +1,5 @@
 # 🚀学习Gazebo插件写法 
-## Ducted-FAN_plugin
+## Ducted-FAN_plugin ---HelloWorld版本
 ### 新建插件源码文件
 - 要先在项目文件下建立我们的`ductedfan_plugin`文件夹
 ```bash
